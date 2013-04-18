@@ -1,0 +1,54 @@
+Options for implementing HLL without read before write.
+
+What I need:
+
+I generally need something like grid / two dimentional array.
+
+There will be 64, 128, 256, 512, 1024 grid "X" coordinate and 256 (because 1 byte can store 0-255 as value) grid "Y" coordinate.
+
+There will be no value, but I can store there "1" (because we use PHP and it requires some value),
+we can also store the byte value, in order to read data easier.
+
+
+
+Option 1:
+
+One counter on one row:
+
+Row key: counter name (my_counter)
+Column names will be XXX:YYY.
+
+Count calculation will requires reading of the full row (512 x 256)
+
+
+
+Option 2:
+
+One counter on 256 rows:
+
+Row key: counter name : YYY (my_counter:123)
+Column names will be XXX, could be Integer or String.
+
+Count calculation will requires reading of the full 256 rows, and all columns.
+
+
+
+Option 3:
+
+One counter on 512 rows:
+
+Row key: counter name : XXX (my_counter:444)
+Columns names must be Integers, reversed comparator.
+
+Because we need only max(id),
+Count calculation will need to read only first column on each row, but there will be 512 rows.
+
+something like:
+
+multiget(range(512), ColumnSlice(limit = 1))
+
+
+
+Project will be implemented in Python, but we definitely need to be able to read the data with PHP.
+
+
