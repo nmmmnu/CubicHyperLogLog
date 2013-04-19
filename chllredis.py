@@ -34,10 +34,13 @@ class CubicHyperLogLogRedis(CubicHyperLogLog):
 		"""
 		Removes !!! the item from the HyperLogLog
 		"""
-		(pos, val) = self.get_add_values(item)
+		(pos, val) = self.get_pos_val(item)
 		
 		self.r.srem(self.keyname, self.rkey(pos, val))
 
+
+	def clear(self):
+		self.r.delete(self.keyname)
 
 	def load(self):
 		"""

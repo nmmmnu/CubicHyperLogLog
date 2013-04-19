@@ -11,7 +11,13 @@ Largely based on:
 
 
 class CubicHyperLogLog(object):
-	BITCOUNT = None
+	BITCOUNT  = None
+	
+	#sha-1 size is 160 bits, see get_pos_val()
+	HASH_SIZE = 160
+	
+	def hash(self, item):
+		return sha1(item)
 	
 	def __init__(self, bits = 9): 
 		"""
@@ -41,7 +47,7 @@ class CubicHyperLogLog(object):
 		# Initialize static list
 		if CubicHyperLogLog.BITCOUNT is None:
 			CubicHyperLogLog.BITCOUNT = []
-			for i in range(160 - bits + 1) :
+			for i in range(self.HASH_SIZE - bits + 1) :
 				CubicHyperLogLog.BITCOUNT.append(1L << i)
 
 
@@ -95,7 +101,7 @@ class CubicHyperLogLog(object):
 		Returns possition and value of the classical byte-structure of the HyperLogLog
 		"""
 		# SHA1 as long int
-		x  = long(sha1(item).hexdigest(), 16)
+		x  = long(self.hash(item).hexdigest(), 16)
 		ff = (1 << self.bits) - 1
 
 		pos = x & ff
@@ -116,21 +122,13 @@ class CubicHyperLogLog(object):
 		"""
 		Removes !!! the item from the HyperLogLog
 		"""
-		(pos, val) = self.get_add_values(item)
+		(pos, val) = self.get_pos_val(item)
 		
 		try:
 			self.MM[pos].remove( val )
 		except KeyError:
 			# Looks like this was never in counter...
 			pass
-
-
-	def add2(self, item):
-		self.add(item)
-
-       
-	def remove2(self, item):
-		self.remove(item)
 
        
 	def update(self, other):
@@ -193,12 +191,12 @@ class CubicHyperLogLog(object):
 			# No correction need
 			return E
 	
-		if E <= float(1L << 160) / 30.0:
+		if E <= float(1L << self.HASH_SIZE) / 30.0:
 			# Intermidiate range correction, e.g. No correction
 			return E
 
 		# Large range correction
-		return -(1L << 160) * math.log(1.0 - E / (1L << 160))
+		return -(1L << self.HASH_SIZE) * math.log(1.0 - E / (1L << self.HASH_SIZE))
             
 	def __len__(self):
 		"""

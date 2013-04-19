@@ -1,9 +1,13 @@
 #!/usr/bin/python
 
-from chllredis import CubicHyperLogLogRedis
-from redis    import Redis
+from chllcassa import CubicHyperLogLogCassandra
 
-r = Redis("localhost")
+from pycassa.pool         import ConnectionPool
+from pycassa.columnfamily import ColumnFamily
+
+pool = ConnectionPool('test', ['localhost:9160'])
+cf   = ColumnFamily(pool, 'hll')
+
 
 test_cardinalities = [
 	1, 2, 5, 10, 20, 50,
@@ -15,7 +19,7 @@ test_cardinalities = [
 	#1000000
 ]
 
-#test_cardinalities = [ 100000000 ]
+#test_cardinalities = [ 100 ]
 
 line = "-" * 62
 
@@ -24,7 +28,7 @@ print "| %5s | %10s | %10s | %10s | %10s  |" % ( "bits", "card", "estim", "diff"
 print line
 
 for card in test_cardinalities:
-	x = CubicHyperLogLogRedis(r, "my_counter", 9)
+	x = CubicHyperLogLogCassandra(cf, "my_counter", 9)
 	
 	x.clear()
 			
