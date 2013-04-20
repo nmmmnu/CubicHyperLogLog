@@ -8,7 +8,8 @@ from chllredis import CubicHyperLogLog
 
 test_cardinalities = [
 	1, 2, 5, 10, 20, 50,
-	100, 1000, 10000, 100000,
+	100, 1000, 10000, 100000, 
+	1700,
 ]
 
 line = "-" * 62
@@ -20,7 +21,8 @@ print line
 for card in test_cardinalities:
 	x = CubicHyperLogLog(9)
 	
-	#x.clear()
+	# No need to call clear()
+	# x.clear()
 	
 	for i in range(card) :
 		x.add(str(i))
@@ -31,6 +33,8 @@ for card in test_cardinalities:
 	perc = float(card - card2) / card * 100
 	
 	print "| %5d | %10d | %10d | %10d | %10.2f%% |" % ( x.m, card, card2, card - card2, perc )
+	
+	#print "Bloomfilter test", ( "Niki" in x ), ( "Peter Peterson" in x ), ( str(123) in x )
 
 print line
 

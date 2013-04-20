@@ -14,7 +14,8 @@ pool = ConnectionPool('test', ['localhost:9160'])
 cf   = ColumnFamily(pool, 'hll')
 mut  = Mutator(pool, 5000)
 
-test_cardinalities = [ 1, 10, 100 ]
+test_cardinalities = [ 1, 2, 3, 4, 5 ]
+test_cardinalities_multiplier = 1000
 
 line = "-" * 62
 
@@ -23,23 +24,26 @@ print "| %5s | %10s | %10s | %10s | %10s  |" % ( "bits", "card", "estim", "diff"
 print line
 
 for card in test_cardinalities:
-	x = CubicHyperLogLogCassandra(cf, "my_counter_i" + str(card) + "m", 9, mutator = mut)
+	x = CubicHyperLogLogCassandra(cf, "my_counter_test", 9, mutator = mut)
 	
-	#x.clear()
+	x.clear()
 			
 	for i in range(card) :
 		print i
-		for j in range(1000000) :
+		for j in range(test_cardinalities_multiplier) :
 			x.add(str(i) + "-" + str(j))
 	
 	mut.send()
 	
 	x.load()
-
+	
+	card  = card * test_cardinalities_multiplier
 	card2 = len(x)
 	perc = float(card - card2) / card * 100
 	
 	print "| %5d | %10d | %10d | %10d | %10.2f%% |" % ( x.m, card, card2, card - card2, perc )
 
+	print "Bloomfilter test", ( "Niki" in x ), ( "Peter Peterson" in x ), ( "123-123" in x )
+	
 
 

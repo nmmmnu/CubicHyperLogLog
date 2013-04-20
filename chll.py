@@ -15,9 +15,11 @@ class CubicHyperLogLog(object):
 	
 	#sha-1 size is 160 bits, see get_pos_val()
 	HASH_SIZE = 160
+
 	
 	def hash(self, item):
 		return sha1(item)
+
 	
 	def __init__(self, bits = 9): 
 		"""
@@ -65,10 +67,6 @@ class CubicHyperLogLog(object):
 			...
 			m: (0..255)
 		]
-		
-		  1M = 5800 columns
-		 10M = 7461 columns
-		100M = 9138 columns
 		"""
 		
 		pass
@@ -130,7 +128,26 @@ class CubicHyperLogLog(object):
 			# Looks like this was never in counter...
 			pass
 
-       
+
+	def contains(self, item):
+ 		"""
+ 		Bloom filter like functionality,
+		checks !!! if the item is already in the HyperLogLog
+		x.contains(item)
+		"""
+		(pos, val) = self.get_pos_val(item)
+		return val in self.MM[pos]
+
+
+	def __contains__(self, item):
+ 		"""
+ 		Bloom filter like functionality,
+		checks !!! if the item is already in the HyperLogLog
+		item in x
+		"""
+		return self.contains(item)
+		
+
 	def update(self, other):
 		"""
 		Alias of merge(),
@@ -165,6 +182,22 @@ class CubicHyperLogLog(object):
 		return M
        
        
+	def clear(self):
+		"""
+		This does nothing here, 
+		but clear external storage in inherited classes
+		"""
+		pass
+		
+		
+	def load(self):
+		"""
+		This does nothing here, 
+		but load external storage into memory in inherited classes
+		"""
+		pass
+		
+		
 	def len(self):
 		"""
 		Returns the estimate of the cardinality as x.len()

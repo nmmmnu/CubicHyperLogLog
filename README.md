@@ -4,9 +4,13 @@ CubicHyperLogLog
 CubicHyperLogLog is HyperLogLog probabilistic counter.
 
 Unlike clasical HyperLogLog counter, this one is optimized for avoiding "read before write" when adding items.
+
 Unlike clasical HyperLogLog counter, CubicHyperLogLog also allows removing !!! items.
 
-There are (will be soon) following implementations:
+Unlike clasical HyperLogLog counter, CubicHyperLogLog also be used like kind of Bloom Filter.
+but it getting saturated very fast and usage is not very useful.
+
+There are following implementations:
 
 1. Redis - avoiding read, gives atomicity.
 
@@ -52,7 +56,7 @@ We did some real live tests and results are:
 
 100M items = 9138 columns needs to be read
       
-See cassandra_schema_notes.txt for more information.
+See test_results.txt and cassandra_schema_notes.txt for more information.
 
 
 

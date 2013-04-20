@@ -42,6 +42,8 @@ for card in test_cardinalities:
 	
 	print "| %5d | %10d | %10d | %10d | %10.2f%% | %6d |" % ( x.m, card, card2, card - card2, perc, r.scard("my_counter") )
 
+	#print "Bloomfilter test", ( "Niki" in x ), ( "Peter Peterson" in x ), ( str(123) in x )
+
 print line
 
 

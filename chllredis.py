@@ -40,17 +40,34 @@ class CubicHyperLogLogRedis(CubicHyperLogLog):
 
 
 	def clear(self):
+		"""
+		Clears external storage
+		"""
 		self.r.delete(self.keyname)
+
+
+	def contains(self, item):
+ 		"""
+ 		Bloom filter like functionality,
+		checks !!! if the item is already in the HyperLogLog
+		x.contains(item)
+		"""
+		(pos, val) = self.get_pos_val(item)
+
+		#print val, self.MM[pos]
+
+		return self.r.sismember(self.keyname, self.rkey(pos, val))
+
 
 	def load(self):
 		"""
 		Loads the HyperLogLog counter from Redis
 		"""
+		self.reset_MM()
+
 		# Expect up to 512 * 255 "columns"
 		dbset = self.r.smembers(self.keyname)
-		
-		self.reset_MM()
-		
+				
 		for pos in range(self.m) :
 			for val in range(256) :
 				k = self.rkey(pos, val)
