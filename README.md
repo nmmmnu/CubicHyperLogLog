@@ -7,14 +7,14 @@ Unlike clasical HyperLogLog counter, this one is optimized for avoiding "read be
 
 Unlike clasical HyperLogLog counter, CubicHyperLogLog also allows removing !!! items.
 
-Unlike clasical HyperLogLog counter, CubicHyperLogLog also be used like kind of Bloom Filter.
+Unlike clasical HyperLogLog counter, CubicHyperLogLog also be used like kind of Bloom Filter,
 but it getting saturated very fast and usage is not very useful.
 
 There are following implementations:
 
-1. Redis - avoiding read, gives atomicity.
+1. Redis - avoiding reading, gives atomicity.
 
-2. Cassandra - reading, gives great performance and atomicity.
+2. Cassandra - avoiding reading, gives great performance and atomicity.
    You will NOT neet to read / write at QUORUM.
 
 
