@@ -1,25 +1,20 @@
 #!/usr/bin/python
 
+#
+# PyCassa test
+#
+
 from chllcassa import CubicHyperLogLogCassandra
 
 from pycassa.pool         import ConnectionPool
 from pycassa.columnfamily import ColumnFamily
+from pycassa.batch        import Mutator
 
 pool = ConnectionPool('test', ['localhost:9160'])
 cf   = ColumnFamily(pool, 'hll')
+mut  = Mutator(pool, 5000)
 
-
-test_cardinalities = [
-	1, 2, 5, 10, 20, 50,
-	100, 101, 102, 103, 110, 
-	1000, 1500, 
-	10000, 
-	#20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 
-	#100000,
-	#1000000
-]
-
-#test_cardinalities = [ 100 ]
+test_cardinalities = [ 1, 10, 100 ]
 
 line = "-" * 62
 
@@ -28,12 +23,16 @@ print "| %5s | %10s | %10s | %10s | %10s  |" % ( "bits", "card", "estim", "diff"
 print line
 
 for card in test_cardinalities:
-	x = CubicHyperLogLogCassandra(cf, "my_counter", 9)
+	x = CubicHyperLogLogCassandra(cf, "my_counter_i" + str(card) + "m", 9, mutator = mut)
 	
-	x.clear()
+	#x.clear()
 			
 	for i in range(card) :
-		x.add(str(i))
+		print i
+		for j in range(1000000) :
+			x.add(str(i) + "-" + str(j))
+	
+	mut.send()
 	
 	x.load()
 
@@ -42,6 +41,5 @@ for card in test_cardinalities:
 	
 	print "| %5d | %10d | %10d | %10d | %10.2f%% |" % ( x.m, card, card2, card - card2, perc )
 
-print line
 
 
