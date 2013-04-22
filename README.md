@@ -50,11 +50,13 @@ This could be 512 * 256 = 131 072 (128 KB) columns/keys.
 This is of cource when structure is fully "saturated". 
 We did some real live tests and results are:
 
-  1M items = 5800 columns needs to be read
+  1M items =  5800 columns needs to be read
+              
+ 10M items =  7461 columns needs to be read
+              
+100M items =  9138 columns needs to be read
 
- 10M items = 7461 columns needs to be read
-
-100M items = 9138 columns needs to be read
+  1B items = 10871 columns needs to be read
       
 See test_results.txt and cassandra_schema_notes.txt for more information.
 
