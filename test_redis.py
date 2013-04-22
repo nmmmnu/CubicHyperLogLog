@@ -4,8 +4,8 @@
 # Redis test
 #
 
-from chllredis import CubicHyperLogLogRedis
-from redis    import Redis
+from cubichyperloglog import CubicHyperLogLogRedis
+from redis            import Redis
 
 r = Redis("localhost")
 

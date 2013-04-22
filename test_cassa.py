@@ -4,7 +4,7 @@
 # PyCassa test
 #
 
-from chllcassa import CubicHyperLogLogCassandra
+from cubichyperloglog     import CubicHyperLogLogCassandra
 
 from pycassa.pool         import ConnectionPool
 from pycassa.columnfamily import ColumnFamily

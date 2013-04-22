@@ -4,7 +4,7 @@
 # Plain test
 #
 
-from chllredis import CubicHyperLogLog
+from cubichyperloglog import CubicHyperLogLog
 
 test_cardinalities = [
 	1, 2, 5, 10, 20, 50,
